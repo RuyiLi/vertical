@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@600&display=swap');
+
+:root {
+  --black: #181818;
+  --white: #ededed;
+  --hover: #adadad88;
+  --filler: #bbbbbb;
+  --gap: 0.2rem;
+  --cell-size: clamp(2.5rem, 2rem + 2vw, 5rem);
+  --blue: #d4e8ef;
+  --font-size: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+
+  font-family: 'Karla', Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+
+  background: var(--white);
+  color: var(--black);
+
+  padding: 3rem;
+  font-weight: 500;
+
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+
+p {
+  font-size: 15pt;
+}
+
+.V {
+  font-size: 2.5rem;
+  letter-spacing: -0.1ch;
+}
+
+/*  */
+
+header {
+  margin-bottom: 2rem;
+}
+
+main {
+  position: relative;
+  height: calc(1rem + 5 * (var(--cell-size) + var(--gap)));
+}
+
+footer {
+  position: relative;
+}
+
+.game-grid-container {
+  position: absolute;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: var(--gap);
+  background: var(--blue);
+}
+
+.game-grid-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--gap);
+}
+
+.game-grid-cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid var(--black);
+  user-select: none;
+}
+
+.game-grid-cell-filler {
+  background: var(--filler);
+}
+
+.game-grid-extras {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: var(--gap);
+  margin-left: var(--gap);
+}
+
+.game-grid-extra {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap);
+
+  text-align: center;
+  vertical-align: middle;
+
+  height: var(--cell-size);
+  line-height: var(--cell-size);
+  font-size: var(--font-size);
+}
+
+/*  */
+
+.game-letters {
+  position: absolute;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--gap);
+}
+
+.game-letters-col {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: var(--gap);
+
+  cursor: grab;
+}
+
+.game-letters-col:hover {
+  background: var(--hover);
+}
+
+.game-letters-letter {
+  width: var(--cell-size);
+  height: var(--cell-size);
+
+  text-align: center;
+  vertical-align: middle;
+  font-size: var(--font-size);
+  line-height: var(--cell-size);
+
+  user-select: none;
+}
+
+.game-letters-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background: var(--hover);
+  pointer-events: none;
+}
