@@ -1,13 +1,53 @@
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
 
-const puzzle = {
-  extras: ['', '', '', 'LATIN', 'TEXT'],
-  answers: ['LOREM', 'IPSUM', 'DOLOR', 'SIT', 'AMET'],
-  scramble: [2, 1, 4, 3, 0],
-}
+const puzzles = [
+  {
+    extras: ['', '', '', 'LATIN', 'TEXT'],
+    answers: ['LOREM', 'IPSUM', 'DOLOR', 'SIT', 'AMET'],
+    scramble: [2, 1, 4, 3, 0],
+  },
+  {
+    extras: ['', '', 'NURSERY', '', 'RHYME'],
+    answers: ['LONDON', 'BRIDGE', 'IS', 'FALLING', 'DOWN'],
+    scramble: [4, 0, 3, 1, 2],
+  },
+  {
+    extras: ['', '', '', 'IDIOM', ''],
+    answers: ['ACTIONS', 'SPEAK', 'LOUDER', 'THAN', 'WORDS'],
+    scramble: [3, 2, 1, 0, 4],
+  },
+  {
+    extras: ['', '', 'WORLD', 'WAR', 'TWO'],
+    answers: ['HERES', 'LOOKIN', 'AT', 'YOU', 'KID'],
+    scramble: [0, 4, 2, 3, 1],
+  },
+]
 
+const today = new Date()
+const firstDate = new Date(2023, 10, 11)
+const puzzleIndex = Math.round((today - firstDate) / (24 * 60 * 60 * 1000))
+const puzzle = puzzles[puzzleIndex]
 const fullWords = [0, 1, 2, 3, 4].map((i) => puzzle.answers[i] + puzzle.extras[i])
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+const month = months[today.getMonth()]
+
+$('#puzzle-index').innerText = puzzleIndex + 1
+$('#date').innerText = month + ' ' + today.getDate()
 
 // Color in cells for filler characters
 const gridRows = $$('.game-grid .game-grid-row')
@@ -36,12 +76,11 @@ puzzle.extras.forEach((extra, i) => {
   const extraText = answer.length > 5 ? answer.slice(5) : extra.slice(5 - answer.length)
   for (const c of extraText) {
     const node = document.createElement('div')
-    node.classList.add('game-grid-cell', 'game-grid-cell-filler')
+    node.classList.add('game-grid-cell', answer.length < 5 && 'game-grid-cell-filler')
     node.style.textAlign = 'center'
     node.innerText = c
     extraRows.item(i).append(node)
   }
-  // extraRows.item(i).innerText = extraText
 })
 
 // D&D

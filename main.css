@@ -32,7 +32,7 @@ body {
   background: var(--white);
   color: var(--black);
 
-  padding: 3rem;
+  padding: calc(2rem + 1vw);
   font-weight: 500;
 
   display: flex;
@@ -42,17 +42,26 @@ body {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   margin: 0;
 }
 
 p {
+  margin: 0;
   font-size: 15pt;
 }
 
 .V {
-  font-size: 2.5rem;
-  letter-spacing: -0.1ch;
+  /* border: 1px solid black;
+  border-right: none;
+  padding-left: 0.4rem; */
+  text-decoration: underline;
+}
+
+#date {
+  color: var(--filler);
+  margin-left: 0.5rem;
 }
 
 /*  */
