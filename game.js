@@ -64,6 +64,7 @@ const month = months[puzzleDate.getMonth()]
 
 $('#puzzle-index').innerText = puzzleIndex + 1
 $('#date').innerText = month + ' ' + puzzleDate.getDate()
+document.title = 'Vertical #' + (puzzleIndex + 1)
 
 // Previous puzzles
 const previousPuzzlesContainer = $('#previous')
