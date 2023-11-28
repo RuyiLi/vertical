@@ -22,14 +22,30 @@ const puzzles = [
     answers: ['HERES', 'LOOKIN', 'AT', 'YOU', 'KID'],
     scramble: [0, 4, 2, 3, 1],
   },
+  {
+    extras: ['', 'JOY', 'HAPPY', 'ELATION', 'GRIN'],
+    answers: ['SMILE', 'FROM', 'EAR', 'TO', 'EAR'],
+    scramble: [1, 3, 4, 0, 2],
+  },
+  {
+    extras: ['HEALTH', 'DIET', 'FOOD', 'BODY', 'FIT'],
+    answers: ['YOU', 'ARE', 'WHAT', 'YOU', 'EAT'],
+    scramble: [1, 3, 4, 0, 2],
+  },
 ]
 
+const params = new URLSearchParams(location.search)
+const puzzleParamNum = Number(params.get('p'))
+
 const today = new Date()
-const firstDate = new Date(2023, 10, 11)
-const puzzleIndex = Math.round((today - firstDate) / (24 * 60 * 60 * 1000))
+const dayInMS = 24 * 60 * 60 * 1000
+const firstDate = new Date(2023, 10, 27)
+const puzzleDateNum = Math.floor((today - firstDate) / dayInMS)
+const puzzleIndex = params.has('p') ? puzzleParamNum - 1 : puzzleDateNum
 const puzzle = puzzles[puzzleIndex]
 const fullWords = [0, 1, 2, 3, 4].map((i) => puzzle.answers[i] + puzzle.extras[i])
 
+const puzzleDate = new Date(firstDate.getTime() + puzzleIndex * dayInMS)
 const months = [
   'January',
   'February',
@@ -44,10 +60,19 @@ const months = [
   'November',
   'December',
 ]
-const month = months[today.getMonth()]
+const month = months[puzzleDate.getMonth()]
 
 $('#puzzle-index').innerText = puzzleIndex + 1
-$('#date').innerText = month + ' ' + today.getDate()
+$('#date').innerText = month + ' ' + puzzleDate.getDate()
+
+// Previous puzzles
+const previousPuzzlesContainer = $('#previous')
+for (let i = 1; i <= puzzleDateNum + 1; i++) {
+  const a = document.createElement('a')
+  a.href = '/?p=' + i
+  a.innerText = '#' + i
+  previousPuzzlesContainer.append(a)
+}
 
 // Color in cells for filler characters
 const gridRows = $$('.game-grid .game-grid-row')

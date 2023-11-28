@@ -64,6 +64,10 @@ p {
   margin-left: 0.5rem;
 }
 
+#previous > a {
+  margin: 0.2rem;
+}
+
 /*  */
 
 header {
