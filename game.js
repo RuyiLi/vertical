@@ -132,14 +132,6 @@ for (let i = 0; i < 5; i++) {
   ghosts.push(ghost)
 }
 
-document.addEventListener('mousemove', function (evt) {
-  if (!drag.active) return
-  const ghost = ghosts[puzzle.scramble[drag.col]]
-  drag.x = evt.pageX - drag.offsetX
-  drag.y = evt.pageY - drag.offsetY
-  ghost.style.transform = `translate(${drag.x}px, ${drag.y}px)`
-})
-
 function trySwap(from) {
   const targets = targeted.map((v, i) => (v ? i : -1)).filter((v) => v !== -1)
   if (targets.length > 1) {
@@ -159,22 +151,51 @@ function hasSolved() {
   return puzzle.scramble.every((v, i) => v === i)
 }
 
-document.addEventListener('mouseup', function (evt) {
+function move(evt) {
+  if (!drag.active) return
+  const ghost = ghosts[puzzle.scramble[drag.col]]
+  const x = evt.pageX
+  const y = evt.pageY
+  drag.x = x - drag.offsetX
+  drag.y = y - drag.offsetY
+  ghost.style.transform = `translate(${drag.x}px, ${drag.y}px)`
+
+  // can't figure out the pointer enter/leave events so doing it manually for now
+  for (let i = 0; i < 5; i++) {
+    const col = letterColumns.item(i)
+    const rect = col.getBoundingClientRect()
+    const inBounds = rect.left <= x && x <= rect.right && rect.top <= y && y <= rect.bottom
+    targeted[i] = inBounds
+    // manually apply hover effect for mobile
+    col.classList.toggle('game-letters-col-hover', inBounds)
+  }
+}
+
+function end(evt) {
   if (!drag.active) return
   ghosts[puzzle.scramble[drag.col]].style.display = 'none'
   letterColumns.item(drag.col).style.opacity = '1'
   trySwap(drag.col)
   drag.col = -1
 
+  for (let i = 0; i < 5; i++) {
+    const col = letterColumns.item(i)
+    col.classList.remove('game-letters-col-hover')
+  }
+
   // Win condition
   if (hasSolved()) {
     setTimeout(() => alert('you win'), 100)
   }
-})
+}
+
+document.addEventListener('pointermove', move)
+document.addEventListener('pointerup', end)
 
 for (let i = 0; i < 5; i++) {
   const col = letterColumns.item(i)
-  col.addEventListener('mousedown', function (evt) {
+
+  col.addEventListener('pointerdown', function (evt) {
     if (drag.active) return
     const { left, top } = col.getBoundingClientRect()
     drag.offsetX = evt.pageX - left
@@ -184,14 +205,11 @@ for (let i = 0; i < 5; i++) {
     const ghost = ghosts[puzzle.scramble[i]]
     ghost.style.display = 'block'
     ghost.style.transform = `translate(${left}px, ${top}px)`
-    console.log(ghosts[puzzle.scramble[i]].style)
   })
 
-  col.addEventListener('mouseover', function () {
-    targeted[i] = true
-  })
+  col.addEventListener('touchstart', (evt) => evt.preventDefault())
 
-  col.addEventListener('mouseleave', function () {
-    targeted[i] = false
-  })
+  // https://github.com/w3c/pointerevents/issues/346
+  // col.addEventListener('pointerenter', () => (targeted[i] = true))
+  // col.addEventListener('pointerout', () => (targeted[i] = false))
 }
