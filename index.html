@@ -2,6 +2,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Vertical" />
+    <meta property="og:site_name" content="Vertical" />
+    <meta property="og:url" content="https://ruyili.ca/vertical/" />
+    <meta property="og:description" content="Daily word game." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://ruyili.ca/vertical/favicon.ico" />
+
     <title>Vertical</title>
     <script src="game.js" type="text/javascript" defer></script>
     <link href="main.css" rel="stylesheet" type="text/css" />
@@ -96,6 +103,14 @@
           <div class="game-letters-letter"></div>
           <div class="game-letters-letter"></div>
           <div class="game-letters-letter"></div>
+        </div>
+      </div>
+      <div class="game-success-modal">
+        <div class="game-sucess-modal-content">
+          <img src="favicon.ico" />
+          <h1>Congratulations!</h1>
+          <p>You solved the Vertical in <strong id="swaps">X</strong> swaps.</p>
+          <button class="game-success-share">Share your score</button>
         </div>
       </div>
     </main>

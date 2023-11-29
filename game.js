@@ -66,6 +66,37 @@ $('#puzzle-index').innerText = puzzleIndex + 1
 $('#date').innerText = month + ' ' + puzzleDate.getDate()
 document.title = 'Vertical #' + (puzzleIndex + 1)
 
+// Load prev state for current puzzle or reset if not exists
+const initialState = localStorage.getItem(puzzleIndex)
+let currSwaps = 0
+let puzzleLocked = false
+if (initialState) {
+  const { swaps, scramble } = JSON.parse(initialState)
+  currSwaps = swaps
+  puzzle.scramble = scramble
+}
+
+const gameSuccessModal = $('.game-success-modal')
+gameSuccessModal.addEventListener('click', function () {
+  gameSuccessModal.classList.remove('game-success-modal-active')
+})
+
+const shareSuccessBtn = $('.game-success-modal')
+shareSuccessBtn.addEventListener('click', function () {
+  const link = `https://ruyili.ca/vertical?p=${puzzleIndex + 1}`
+  navigator.clipboard.writeText(
+    `I solved Vertical #${puzzleIndex + 1} in ${currSwaps} swaps!\n${link}`
+  )
+})
+
+function maybeGameOver() {
+  if (!hasSolved()) return
+  puzzleLocked = true
+  $('#swaps').innerText = currSwaps
+  gameSuccessModal.classList.add('game-success-modal-active')
+}
+maybeGameOver()
+
 // Previous puzzles
 const previousPuzzlesContainer = $('#previous')
 for (let i = 1; i <= puzzleDateNum + 1; i++) {
@@ -143,6 +174,17 @@ function trySwap(from) {
     const b = puzzle.scramble[to]
     puzzle.scramble[from] = b
     puzzle.scramble[to] = a
+
+    // update swaps & localstorage
+    currSwaps++
+    localStorage.setItem(
+      puzzleIndex,
+      JSON.stringify({
+        swaps: currSwaps,
+        scramble: puzzle.scramble,
+      })
+    )
+
     requestAnimationFrame(renderLetters)
   }
 }
@@ -183,10 +225,7 @@ function end(evt) {
     col.classList.remove('game-letters-col-hover')
   }
 
-  // Win condition
-  if (hasSolved()) {
-    setTimeout(() => alert('you win'), 100)
-  }
+  maybeGameOver()
 }
 
 document.addEventListener('pointermove', move)
@@ -196,14 +235,14 @@ for (let i = 0; i < 5; i++) {
   const col = letterColumns.item(i)
 
   col.addEventListener('pointerdown', function (evt) {
-    if (drag.active) return
+    if (drag.active || puzzleLocked) return
     const { left, top } = col.getBoundingClientRect()
     drag.offsetX = evt.pageX - left
     drag.offsetY = evt.pageY - top
     col.style.opacity = '0.5'
     drag.col = i
     const ghost = ghosts[puzzle.scramble[i]]
-    ghost.style.display = 'block'
+    ghost.style.display = 'grid'
     ghost.style.transform = `translate(${left}px, ${top}px)`
   })
 
