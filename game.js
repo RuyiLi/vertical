@@ -101,7 +101,7 @@ maybeGameOver()
 const previousPuzzlesContainer = $('#previous')
 for (let i = 1; i <= puzzleDateNum + 1; i++) {
   const a = document.createElement('a')
-  a.href = '/?p=' + i
+  a.href = 'https://ruyili.ca/vertical?p=' + i
   a.innerText = '#' + i
   previousPuzzlesContainer.append(a)
 }
