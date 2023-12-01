@@ -23,14 +23,34 @@ const puzzles = [
     scramble: [0, 4, 2, 3, 1],
   },
   {
+    extras: ['', '', 'TO', 'THE', 'PLACE'],
+    answers: ['COUNTRY', 'ROADS', 'TAKE', 'ME', 'HOME'],
+    scramble: [2, 1, 3, 4, 0],
+  },
+  {
     extras: ['', 'JOY', 'HAPPY', 'ELATION', 'GRIN'],
     answers: ['SMILE', 'FROM', 'EAR', 'TO', 'EAR'],
     scramble: [1, 3, 4, 0, 2],
   },
   {
+    extras: ['', 'APOLLO', 'NASA', 'MISSION', ''],
+    answers: ['HOUSTON', 'WE', 'HAVE', 'A', 'PROBLEM'],
+    scramble: [4, 2, 1, 3, 0],
+  },
+  {
+    extras: ['NO', 'VALLEY', '', 'LOW', ''],
+    answers: ['AINT', 'NO', 'MOUNTAIN', 'HIGH', 'ENOUGH'],
+    scramble: [4, 2, 3, 1, 0],
+  },
+  {
     extras: ['HEALTH', 'DIET', 'FOOD', 'BODY', 'FIT'],
     answers: ['YOU', 'ARE', 'WHAT', 'YOU', 'EAT'],
     scramble: [1, 3, 4, 0, 2],
+  },
+  {
+    extras: ['', 'QUEEN', '', 'DIES', 'AGAIN'],
+    answers: ['ANOTHER', 'ONE', 'BITES', 'THE', 'DUST'],
+    scramble: [1, 4, 0, 3, 2],
   },
 ]
 
