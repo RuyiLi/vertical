@@ -52,6 +52,66 @@ const puzzles = [
     answers: ['ANOTHER', 'ONE', 'BITES', 'THE', 'DUST'],
     scramble: [1, 4, 0, 3, 2],
   },
+  {
+    extras: ['STRIKE', '', 'FAIL', 'ATTEMPT', 'OUT'],
+    answers: ['A', 'SWING', 'AND', 'A', 'MISS'],
+    scramble: [2, 4, 3, 0, 1],
+  },
+  {
+    extras: ['HALF', 'LIFE', 'TWO', 'RISE', 'AND', 'SHINE'],
+    answers: ['WAKE', 'UP', 'AND', 'SMELL', 'THE', 'ASHES'],
+    scramble: [3, 1, 5, 4, 0, 2],
+  },
+  {
+    extras: ['JEDI', 'STAR', 'WARS', 'V', ''],
+    answers: ['LUKE', 'I', 'AM', 'YOUR', 'FATHER'],
+    scramble: [0, 4, 1, 2, 3],
+  },
+  {
+    extras: ['', 'PRIZE', 'IMMORTAL', 'WAR', 'QUEEN'],
+    answers: ['THERE', 'CAN', 'BE', 'ONLY', 'ONE'],
+    scramble: [0, 3, 4, 1, 2],
+  },
+  {
+    extras: ['TOY', '', 'STORY', ''],
+    answers: ['TO', 'INFINITY', 'AND', 'BEYOND'],
+    scramble: [2, 3, 0, 1],
+  },
+  {
+    extras: ['FAKE', 'DOUG', 'PORTAL', 'GLADOS', 'CHELL'],
+    answers: ['THE', 'CAKE', 'IS', 'A', 'LIE'],
+    scramble: [3, 0, 4, 1, 2],
+  },
+  {
+    extras: ['AGENT', 'ULT', 'SNIPER', 'TOUR', 'DE', 'FORCE'],
+    answers: ['YOU', 'WANT', 'TO', 'PLAY', 'LETS', 'PLAY'],
+    scramble: [4, 1, 0, 2, 5, 3],
+  },
+  {
+    extras: ['', 'ARNOLD', '', ''],
+    answers: ['HASTA', 'LA', 'VISTA', 'BABY'],
+    scramble: [2, 1, 3, 0],
+  },
+  {
+    extras: ['TELL', 'ME', 'WHY', 'I', 'NEVER'],
+    answers: ['I', 'WANT', 'IT', 'THAT', 'WAY'],
+    scramble: [1, 4, 2, 0, 3],
+  },
+  {
+    extras: ['WHITE', 'BEARD', '', 'TREASURE', 'LUFFY'],
+    answers: ['THE', 'ONE', 'PIECE', 'IS', 'REAL'],
+    scramble: [4, 1, 3, 0, 2],
+  },
+  {
+    extras: ['', '', '', 'SHREK'],
+    answers: ['SOMEBODY', 'ONCE', 'TOLD', 'ME'],
+    scramble: [3, 0, 1, 2],
+  },
+  {
+    extras: [' ', '  ', '', '   ', ''],
+    answers: ['WILL', 'YOU', 'MARRY', 'ME', 'SONIA'],
+    scramble: [2, 0, 1, 4, 3],
+  },
 ]
 
 const params = new URLSearchParams(location.search)
@@ -62,8 +122,10 @@ const dayInMS = 24 * 60 * 60 * 1000
 const firstDate = new Date(2023, 10, 27)
 const puzzleDateNum = Math.floor((today - firstDate) / dayInMS)
 const puzzleIndex = params.has('p') ? puzzleParamNum - 1 : puzzleDateNum
-const puzzle = puzzles[puzzleIndex]
-const fullWords = [0, 1, 2, 3, 4].map((i) => puzzle.answers[i] + puzzle.extras[i])
+// too lazy to make this better
+const puzzle = structuredClone(puzzles[puzzleIndex])
+const N = puzzle.answers.length
+const fullWords = Array.from({ length: N }, (_, i) => puzzle.answers[i] + puzzle.extras[i])
 
 const puzzleDate = new Date(firstDate.getTime() + puzzleIndex * dayInMS)
 const months = [
@@ -83,26 +145,43 @@ const months = [
 const month = months[puzzleDate.getMonth()]
 
 $('#puzzle-index').innerText = puzzleIndex + 1
+$('#puzzle-type').innerText = N + 'x' + N
 $('#date').innerText = month + ' ' + puzzleDate.getDate()
+$(':root').style.setProperty('--n', N)
 document.title = 'Vertical #' + (puzzleIndex + 1)
 
 // Load prev state for current puzzle or reset if not exists
-const initialState = localStorage.getItem(puzzleIndex)
 let currSwaps = 0
 let puzzleLocked = false
+function reset() {
+  puzzle.scramble = puzzles[puzzleIndex].scramble.slice()
+  localStorage.removeItem(puzzleIndex)
+  currSwaps = 0
+  puzzleLocked = false
+}
+reset()
+
+const initialState = localStorage.getItem(puzzleIndex)
 if (initialState) {
   const { swaps, scramble } = JSON.parse(initialState)
   currSwaps = swaps
   puzzle.scramble = scramble
 }
 
+// Restore to initial state
+$('#reset').addEventListener('click', function () {
+  reset()
+  requestAnimationFrame(renderLetters)
+})
+
+// Remove modal when clicked
 const gameSuccessModal = $('.game-success-modal')
 gameSuccessModal.addEventListener('click', function () {
   gameSuccessModal.classList.remove('game-success-modal-active')
 })
 
-const shareSuccessBtn = $('.game-success-modal')
-shareSuccessBtn.addEventListener('click', function () {
+// Share button
+$('.game-success-share').addEventListener('click', function () {
   const link = `https://ruyili.ca/vertical?p=${puzzleIndex + 1}`
   navigator.clipboard.writeText(
     `I solved Vertical #${puzzleIndex + 1} in ${currSwaps} swaps!\n${link}`
@@ -118,19 +197,49 @@ function maybeGameOver() {
 maybeGameOver()
 
 // Previous puzzles
-const previousPuzzlesContainer = $('#previous')
 for (let i = 1; i <= puzzleDateNum + 1; i++) {
   const a = document.createElement('a')
   a.href = 'https://ruyili.ca/vertical?p=' + i
   a.innerText = '#' + i
-  previousPuzzlesContainer.append(a)
+  $('#previous').append(a)
+}
+
+// Init grid
+for (let i = 0; i < N; i++) {
+  const row = document.createElement('div')
+  row.classList.add('game-grid-row')
+  for (let j = 0; j < N; j++) {
+    const cell = document.createElement('div')
+    cell.classList.add('game-grid-cell')
+    row.append(cell)
+  }
+  $('.game-grid').append(row)
+}
+
+// Init extras
+for (let i = 0; i < N; i++) {
+  const extra = document.createElement('div')
+  extra.classList.add('game-grid-extra')
+  $('.game-grid-extras').append(extra)
+}
+
+// Init letter columns
+for (let i = 0; i < N; i++) {
+  const col = document.createElement('div')
+  col.classList.add('game-letters-col')
+  for (let j = 0; j < N; j++) {
+    const cell = document.createElement('div')
+    cell.classList.add('game-letters-letter')
+    col.append(cell)
+  }
+  $('.game-letters').append(col)
 }
 
 // Color in cells for filler characters
 const gridRows = $$('.game-grid .game-grid-row')
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < N; i++) {
   const rowCells = gridRows.item(i).children
-  for (let j = puzzle.answers[i].length; j < 5; j++) {
+  for (let j = puzzle.answers[i].length; j < N; j++) {
     rowCells.item(j).classList.add('game-grid-cell-filler')
   }
 }
@@ -139,7 +248,7 @@ for (let i = 0; i < 5; i++) {
 const letterColumns = $$('.game-letters .game-letters-col')
 function renderLetters() {
   const colLetters = puzzle.scramble.map((i) => fullWords.map((word) => word[i]))
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < N; i++) {
     const col = letterColumns.item(i)
     colLetters[i].forEach((c, i) => (col.children.item(i).innerText = c))
   }
@@ -150,10 +259,10 @@ renderLetters()
 const extraRows = $$('.game-grid-extras .game-grid-extra')
 puzzle.extras.forEach((extra, i) => {
   const answer = puzzle.answers[i]
-  const extraText = answer.length > 5 ? answer.slice(5) : extra.slice(5 - answer.length)
+  const extraText = answer.length > N ? answer.slice(N) : extra.slice(N - answer.length)
   for (const c of extraText) {
     const node = document.createElement('div')
-    node.classList.add('game-grid-cell', answer.length < 5 && 'game-grid-cell-filler')
+    node.classList.add('game-grid-cell', answer.length < N && 'game-grid-cell-filler')
     node.style.textAlign = 'center'
     node.innerText = c
     extraRows.item(i).append(node)
@@ -175,7 +284,7 @@ const drag = {
 const targeted = [false, false, false, false, false]
 
 const ghosts = []
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < N; i++) {
   const idx = puzzle.scramble.indexOf(i)
   const ghost = letterColumns.item(idx).cloneNode(true)
   ghost.classList.add('game-letters-ghost')
@@ -223,7 +332,7 @@ function move(evt) {
   ghost.style.transform = `translate(${drag.x}px, ${drag.y}px)`
 
   // can't figure out the pointer enter/leave events so doing it manually for now
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < N; i++) {
     const col = letterColumns.item(i)
     const rect = col.getBoundingClientRect()
     const inBounds = rect.left <= x && x <= rect.right && rect.top <= y && y <= rect.bottom
@@ -240,7 +349,7 @@ function end(evt) {
   trySwap(drag.col)
   drag.col = -1
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < N; i++) {
     const col = letterColumns.item(i)
     col.classList.remove('game-letters-col-hover')
   }
@@ -251,7 +360,7 @@ function end(evt) {
 document.addEventListener('pointermove', move)
 document.addEventListener('pointerup', end)
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < N; i++) {
   const col = letterColumns.item(i)
 
   col.addEventListener('pointerdown', function (evt) {

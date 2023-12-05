@@ -9,6 +9,7 @@
   --cell-size: clamp(2.25rem, 1.5rem + 2vw, 5rem);
   --blue: #d4e8ef;
   --font-size: clamp(1.5rem, 0.75rem + 2vw, 2.75rem);
+  --n: 5;
 }
 
 *,
@@ -60,6 +61,15 @@ button {
   border: 1px solid var(--black);
   outline: none;
   cursor: pointer;
+  transition: 0.1s ease-in-out;
+}
+
+button:hover {
+  background: var(--hover);
+}
+
+button:active {
+  background: var(--filler);
 }
 
 .V {
@@ -75,6 +85,10 @@ button {
   margin: 0.2rem;
 }
 
+#reset {
+  margin-top: 1rem;
+}
+
 /*  */
 
 header {
@@ -83,7 +97,7 @@ header {
 
 main {
   position: relative;
-  height: calc(1rem + 5 * (var(--cell-size) + var(--gap)));
+  height: calc(1rem + var(--n) * (var(--cell-size) + var(--gap)));
 }
 
 footer {
@@ -99,14 +113,14 @@ footer {
 
 .game-grid {
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(var(--n), 1fr);
   gap: var(--gap);
   background: var(--blue);
 }
 
 .game-grid-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--n), 1fr);
   gap: var(--gap);
 }
 
@@ -123,7 +137,7 @@ footer {
 
 .game-grid-extras {
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(var(--n), 1fr);
   gap: var(--gap);
   margin-left: var(--gap);
 }
@@ -147,13 +161,13 @@ footer {
   position: absolute;
 
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--n), 1fr);
   gap: var(--gap);
 }
 
 .game-letters-col {
   display: grid;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(var(--n), 1fr);
   gap: var(--gap);
   cursor: grab;
   touch-action: pinch-zoom;

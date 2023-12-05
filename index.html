@@ -3,11 +3,13 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104321992-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
 
-      gtag('config', 'UA-104321992-1');
+      gtag('config', 'UA-104321992-1')
     </script>
 
     <meta charset="UTF-8" />
@@ -15,7 +17,7 @@
     <meta property="og:title" content="Vertical" />
     <meta property="og:site_name" content="Vertical" />
     <meta property="og:url" content="https://ruyili.ca/vertical/" />
-    <meta property="og:description" content="Daily word game." />
+    <meta property="og:description" content="Daily column-swapping word game." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://ruyili.ca/vertical/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -27,95 +29,18 @@
   <body>
     <header>
       <h1>
-        <span class="V">V</span>ertical #<span id="puzzle-index">X</span>
+        <span class="V">V</span>ertical #<span id="puzzle-index">X</span>,
+        <span id="puzzle-type">5x5</span>
         <span id="date"></span>
       </h1>
       <h4>by <a href="https://ruyili.ca/">Ruyi Li</a></h4>
     </header>
     <main>
       <div class="game-grid-container">
-        <div class="game-grid">
-          <div class="game-grid-row">
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-          </div>
-          <div class="game-grid-row">
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-          </div>
-          <div class="game-grid-row">
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-          </div>
-          <div class="game-grid-row">
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-          </div>
-          <div class="game-grid-row">
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-            <div class="game-grid-cell"></div>
-          </div>
-        </div>
-        <div class="game-grid-extras">
-          <div class="game-grid-extra"></div>
-          <div class="game-grid-extra"></div>
-          <div class="game-grid-extra"></div>
-          <div class="game-grid-extra"></div>
-          <div class="game-grid-extra"></div>
-        </div>
+        <div class="game-grid"></div>
+        <div class="game-grid-extras"></div>
       </div>
-      <div class="game-letters">
-        <div class="game-letters-col">
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-        </div>
-        <div class="game-letters-col">
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-        </div>
-        <div class="game-letters-col">
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-        </div>
-        <div class="game-letters-col">
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-        </div>
-        <div class="game-letters-col">
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-          <div class="game-letters-letter"></div>
-        </div>
-      </div>
+      <div class="game-letters"></div>
       <div class="game-success-modal">
         <div class="game-sucess-modal-content">
           <img src="favicon.ico" />
@@ -127,12 +52,12 @@
     </main>
     <footer>
       <p>
-        Swap the columns until the rows form a common five-word phrase. Gray cells form words that
-        are related to, but not part of the puzzle. White cells are a part of the puzzle and are
-        fixed.
+        Swap the columns until the rows form a common phrase. <br />
+        Gray cells form words that are related to, but not part of the puzzle.<br />
+        White cells are a part of the puzzle and are fixed.
       </p>
-      <br />
       <p>Past: <span id="previous"></span></p>
+      <button id="reset">Reset</button>
     </footer>
   </body>
 </html>
