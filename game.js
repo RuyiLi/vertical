@@ -112,6 +112,46 @@ const puzzles = [
     answers: ['WILL', 'YOU', 'MARRY', 'ME', 'SONIA'],
     scramble: [2, 0, 1, 4, 3],
   },
+  {
+    extras: ['', 'OMNI', '', 'MAN', ''],
+    answers: ['EARTH', 'ISNT', 'YOURS', 'TO', 'CONQUER'],
+    scramble: [1, 0, 4, 3, 2],
+  },
+  {
+    extras: ['FULL', 'METAL', '', 'ALCHE', 'MIST', 'ROY'],
+    answers: ['ITS', 'A', 'TERRIBLE', 'DAY', 'FOR', 'RAIN'],
+    scramble: [5, 4, 3, 2, 1, 0],
+  },
+  {
+    extras: ['EARTH', '', 'WIND', 'FIRE', 'REMEMBER', ''],
+    answers: ['THE', 'TWENTY', 'FIRST', 'NIGHT', 'OF', 'SEPTEMBER'],
+    scramble: [5, 2, 4, 3, 0, 1],
+  },
+  {
+    extras: ['GRAN', 'TO', 'RIMO', ''],
+    answers: ['GET', 'OFF', 'MY', 'LAWN'],
+    scramble: [2, 3, 1, 0],
+  },
+  {
+    extras: ['', 'TEAM', 'FOR', 'TRE', 'SS'],
+    answers: ['SNIPINGS', 'A', 'GOOD', 'JOB', 'MATE'],
+    scramble: [0, 4, 3, 2, 1],
+  },
+  {
+    extras: ['STAR', 'WARS', 'A', 'YODA', 'NEW', 'HOPE'],
+    answers: ['MAY', 'THE', 'FORCE', 'BE', 'WITH', 'YOU'],
+    scramble: [1, 0, 4, 2, 5, 3],
+  },
+  {
+    extras: ['HUNGER', '', 'GAMES', ''],
+    answers: ['I', 'VOLUNTEER', 'AS', 'TRIBUTE'],
+    scramble: [3, 2, 0, 1],
+  },
+  {
+    extras: ['GEORGE', '', 'ORWELL', '', 'EYES'],
+    answers: ['BIG', 'BROTHER', 'IS', 'WATCHING', 'YOU'],
+    scramble: [1, 3, 4, 2, 0],
+  },
 ]
 
 const params = new URLSearchParams(location.search)
@@ -121,7 +161,7 @@ const today = new Date()
 const dayInMS = 24 * 60 * 60 * 1000
 const firstDate = new Date(2023, 10, 27)
 const puzzleDateNum = Math.floor((today - firstDate) / dayInMS)
-const puzzleIndex = params.has('p') ? puzzleParamNum - 1 : puzzleDateNum
+const puzzleIndex = (params.has('p') ? puzzleParamNum - 1 : puzzleDateNum) % puzzles.length
 // too lazy to make this better
 const puzzle = structuredClone(puzzles[puzzleIndex])
 const N = puzzle.answers.length
@@ -153,13 +193,6 @@ document.title = 'Vertical #' + (puzzleIndex + 1)
 // Load prev state for current puzzle or reset if not exists
 let currSwaps = 0
 let puzzleLocked = false
-function reset() {
-  puzzle.scramble = puzzles[puzzleIndex].scramble.slice()
-  localStorage.removeItem(puzzleIndex)
-  currSwaps = 0
-  puzzleLocked = false
-}
-reset()
 
 const initialState = localStorage.getItem(puzzleIndex)
 if (initialState) {
@@ -170,7 +203,10 @@ if (initialState) {
 
 // Restore to initial state
 $('#reset').addEventListener('click', function () {
-  reset()
+  puzzle.scramble = puzzles[puzzleIndex].scramble.slice()
+  currSwaps = 0
+  puzzleLocked = false
+  localStorage.removeItem(puzzleIndex)
   requestAnimationFrame(renderLetters)
 })
 
